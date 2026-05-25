@@ -1,0 +1,98 @@
+[
+  {
+    "idUnique": 1778687298087,
+    "rq": "LIC-PE-001",
+    "area": "LIC-PE",
+    "resp": "WOLFGANG JIMÉNEZ",
+    "tur": "FULL",
+    "fini": "2026-05-14",
+    "falta": "",
+    "n_req": "2",
+    "n_aprob": "",
+    "obs": "",
+    "fechas": [
+      "2026-05-14",
+      "2026-05-15",
+      "2026-05-16",
+      "2026-05-17",
+      "2026-05-18",
+      "2026-05-19"
+    ],
+    "participantes": [
+      {
+        "nom": "RAFAEL POMA",
+        "dni": "12345678",
+        "tel": "913812705",
+        "asistencia": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "obs": ""
+      },
+      {
+        "nom": "RUT",
+        "dni": "23456789",
+        "tel": "955040718",
+        "asistencia": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "obs": ""
+      }
+    ]
+  },
+  {
+    "idUnique": 1778687502210,
+    "rq": "LIC-CO-002",
+    "area": "LIC-CO",
+    "resp": "WOLFGANG JIMÉNEZ",
+    "tur": "AM",
+    "fini": "2026-05-15",
+    "falta": "",
+    "n_req": "0",
+    "n_aprob": "",
+    "obs": "",
+    "fechas": [
+      "2026-05-15",
+      "2026-05-16",
+      "2026-05-17",
+      "2026-05-18",
+      "2026-05-19",
+      "2026-05-20",
+      "2026-05-21",
+      "2026-05-22"
+    ],
+    "participantes": []
+  },
+  {
+    "idUnique": 1778689209888,
+    "rq": "LIC-PE-002",
+    "area": "LIC-PE",
+    "resp": "WOLFGANG JIMÉNEZ",
+    "tur": "PM",
+    "fini": "2026-05-15",
+    "falta": "",
+    "n_req": "",
+    "n_aprob": "",
+    "obs": "",
+    "fechas": [
+      "2026-05-15",
+      "2026-05-16",
+      "2026-05-17",
+      "2026-05-18",
+      "2026-05-19",
+      "2026-05-20",
+      "2026-05-21",
+      "2026-05-22"
+    ],
+    "participantes": []
+  }
+]

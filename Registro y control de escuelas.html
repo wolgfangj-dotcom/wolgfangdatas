@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Escuelas 2026 - Versión Integral</title>
+    <style>
+        :root { --primary: #2c3e50; --secondary: #3498db; --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --am-color: #fff9c4; --pm-color: #e3f2fd; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 20px; background: #f0f2f5; }
+        .container { max-width: 1450px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; border: none; background: #ddd; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .tab-btn.active { background: var(--secondary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .section-card { background: #eef4ff; border: 1px solid #bed0ef; border-radius: 12px; padding: 18px; margin-bottom: 20px; }
+        .section-title { font-size: 1rem; font-weight: 700; color: #1f3c88; margin-bottom: 14px; }
+        .download-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+        .form-grid, .filter-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: #ffffff; padding: 12px; border-radius: 10px; margin-bottom: 0; border: 1px solid #d7e4f3; }
+        .filter-panel { background: #f5f9ff; border-color: #d9e9ff; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .filter-panel > div, .form-grid > div { min-width: 160px; }
+        .filter-panel select[multiple] { min-height: 40px; height: 40px; appearance: menulist-button; }
+        .form-grid { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .form-grid select, .form-grid input, .form-grid textarea { padding: 8px; border: 1px solid #bfc8d6; border-radius: 6px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 0.95em; }
+        .form-grid button { height: 40px; align-self: end; min-height: auto; }
+        .full-btn { width: 100%; }
+        .small-btn { padding: 6px 12px; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; }
+        input, select, textarea { padding: 5px; border: 1px solid #ccc; border-radius: 2px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85em; color: #444; }
+        
+        .btn { padding: 10px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Calendario */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #eee; border: 1px solid #ddd; }
+        .calendar-header { background: var(--primary); color: white; text-align: center; padding: 10px; font-weight: bold; }
+        .calendar-day { background: white; min-height: 110px; padding: 5px; border: 1px solid #eee; }
+        .day-num { font-weight: bold; color: #888; margin-bottom: 5px; display: block; }
+
+        /* Post-it */
+        .post-it.am { background: var(--am-color) !important; border-left-color: #fbc02d; }
+        .post-it.pm { background: var(--pm-color) !important; border-left-color: #1976d2; }
+        .post-it.fullday { background: #d6c5f8 !important; border-left-color: #5e35b1; }
+
+        /* Fila de Participante: Botones al final y sin superposición */
+        .participante-row { 
+            display: grid; 
+            grid-template-columns: 1.5fr 0.8fr 0.8fr repeat(8, 35px) 2fr 45px; 
+            gap: 10px; 
+            align-items: center; 
+            padding: 8px 5px; 
+            border-bottom: 1px solid #eee; 
+        }
+
+        /* Notas ajustables que no rompen el diseño */
+        textarea.obs-p { 
+            height: 32px; 
+            min-height: 32px; 
+            resize: vertical; 
+            font-size: 10px; 
+            line-height: 1.2; 
+            width: 100%;
+        }
+
+        /* Post-its del Calendario con más info */
+        .post-it { 
+            font-size: 9px; 
+            padding: 4px; 
+            margin-top: 3px; 
+            border-radius: 3px; 
+            border-left: 4px solid #555; 
+            line-height: 1.1;
+        }
+        .post-it b { color: #000; display: block; margin-bottom: 2px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+
+        .accordion { border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        .accordion-header { display: flex; justify-content: space-between; align-items: center; background: #2c3e50; color: white; padding: 14px 16px; cursor: pointer; }
+        .accordion-body { display: none; background: #fafafa; padding: 12px; }
+        .school-card { border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 12px; background: white; overflow-x: auto; }
+        .school-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px; background: #f4f6fb; cursor: pointer; }
+        .school-body { display: none; padding: 10px; overflow-x: auto; }
+        .school-info { margin-bottom: 10px; color: #444; font-size: 0.95em; }
+        .school-table { width: auto; min-width: 960px; border-collapse: collapse; margin-top: 14px; }
+        .school-table th, .school-table td { border: 1px solid #ddd; padding: 4px; text-align: left; vertical-align: center; }
+        .school-table th { background: #f5f7fb; }
+        .school-table td select { max-width: 140px; }
+        .school-table td.kpi-status-col { width: 120px; text-align: center; }
+        .school-table td.date-col, .school-table th.date-col { text-align: center; width: 100px; }
+        .btn-sm { padding: 6px 10px; font-size: 0.8em; }
+        .resize-both { resize: both; min-height: 4px; min-width: 120px; width: auto; overflow: auto; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 0.85em; }
+        th { background: #f4f4f4; color: var(--primary); }
+        .obs-cell { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .nowrap-cell { white-space: nowrap; }
+
+        /* Modal de desbloqueo */
+        .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-backdrop.active { display: flex; }
+        .modal-card { width: min(420px, calc(100% - 40px)); background: white; border-radius: 14px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.18); }
+        .modal-card h3 { margin: 0 0 12px; color: #2c3e50; }
+        .modal-card p { margin: 0 0 18px; color: #555; line-height: 1.5; }
+        .modal-card label { font-weight: 600; margin-bottom: 8px; display: block; }
+        .modal-card input { width: 100%; padding: 10px 12px; border: 1px solid #cfd8e3; border-radius: 8px; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+        .modal-actions .btn { min-width: 100px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2>Sistema de Gestión de Escuelas</h2>
+        <div>
+            <button class="btn" style="background:var(--primary)" onclick="exportarData()">💾 Exportar</button>
+            <button class="btn" style="background:var(--secondary)" onclick="document.getElementById('fileIn').click()">📂 Importar</button>
+            <input type="file" id="fileIn" style="display:none" onchange="importarData(event)">
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button id="t1" class="tab-btn active" onclick="verTab('reg')">Registro de Escuelas</button>
+        <button id="t3" class="tab-btn" onclick="verTab('asist')">Asistencias</button>
+        <button id="t2" class="tab-btn" onclick="verTab('cal')">Almanaque Visual</button>
+    </div>
+
+    <!-- Pestaña Registro -->
+    <div id="reg" class="tab-content active">
+        <div class="section-card">
+            <div class="section-title">Panel de descargas</div>
+            <div class="filter-panel">
+            <div><label>Tipo de exportación</label><select id="filterExportType"><option value="schools">Solo escuelas</option><option value="schoolsWithParticipants">Escuelas con participantes</option></select></div>
+            <div><label>Despacho</label><select id="filterArea" multiple size="1"></select></div>
+            <div><label>Escuelas</label><select id="filterEscuela" multiple size="1"></select></div>
+            <div><label>Responsable</label><select id="filterResp" multiple size="1"></select></div>
+            <div><label>Mes inicio</label><select id="filterInicioMes" multiple size="1"></select></div>
+            <div><label>Mes finalización</label><select id="filterEndMonth" multiple size="1"></select></div>
+            <div><label>Año</label><select id="filterYear" multiple size="1"></select></div>
+            <div><label>Formato</label><select id="filterFormat" multiple size="1"><option value="CSV" selected>CSV</option><option value="PDF" selected>PDF</option></select></div>
+        </div>
+            <div class="download-actions" style="margin-top:12px;">
+                <button class="btn" style="background:var(--primary);" onclick="exportFilteredData()">Descargar</button>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-title">Registro de escuelas</div>
+            <div class="form-grid">
+                <input type="hidden" id="idx" value="-1">
+                <div><label>Área</label>
+                    <select id="area">
+                        <option>LIC-PE</option><option>LIC-CO</option>
+                        <option>CAP-PE</option><option>CAP-CO</option><option>TRIB</option>
+                    </select>
+                </div>
+                <div><label>Responsable</label><select id="resp"><option>WOLGFANG JIMENEZ</option><option>JUNIOR BARBOZA</option>
+                                                <OPTION>kATIA NIZAMA</OPTION><OPTION>AUXILIAR 1</OPTION>
+                                            </select>
+                                        </div>
+                <div><label>Motivo</label>
+                    <select id="mot">
+                        <option>DOTACION</option><option>ROTACION</option><option>CRECIMIENTO</option>
+                    </select>
+                </div>
+                <div><label>N° Requerido</label><input type="number" id="req" value="0"></div>
+                <div><label>Turno</label>
+                    <select id="tur"><option value="AM">AM</option><option value="PM">PM</option><option value="FULL DAY">FULL DAY</option></select>
+                </div>
+                <div><label>Estado</label>
+                    <select id="status">
+                        <option>Programado</option>
+                        <option>En proceso</option>
+                        <option>Finalizado</option>
+                        <option>Cancelado</option>
+                    </select>
+                </div>
+                <div><label>Fecha Inicio</label><input type="date" id="fini"></div>
+                <div id="extraFields" style="display:none; grid-column: span 2; display: flex; gap: 10px;">
+                    <div style="flex:1"><label>Fecha Alta</label><input type="date" id="falta"></div>
+                    <div style="flex:1"><label>Aprobados</label><input type="number" id="aprob" value="0"></div>
+                </div>
+                <div style="grid-column: span 2;"><label>Observaciones</label><textarea id="obs" rows="1" placeholder="Modificaciones o notas..."></textarea></div>
+                <div style="grid-column: span 2; display:flex; justify-content:flex-end; align-items:flex-end;">
+                    <button class="btn full-btn" style="background:var(--success);" onclick="guardar()">REGISTRAR</button>
+                </div>
+            </div>
+        </div>
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>RQ</th><th>Responsable</th><th>Motivo</th><th>Req.</th><th>Part.</th><th>Turno</th><th>Inicio</th><th>Fin</th><th>Alta</th><th>Apr.</th><th>Estado</th><th>Obs.</th><th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <!-- Pestaña Asistencias -->
+    <div id="asist" class="tab-content">
+        <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; margin-bottom:12px;">
+            <span style="font-size:0.95em; color:#555;">Usa el panel de descargas del registro para exportar escuelas o escuelas con participantes.</span>
+        </div>
+        <div id="asistAreasContainer"></div>
+        <div id="asistEmpty" style="display:none; color:#666; padding:20px; border:1px dashed #ccc; border-radius:8px; background:#fafafa;">No hay escuelas registradas.</div>
+    </div>
+
+    <!-- Pestaña Almanaque -->
+    <div id="cal" class="tab-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="btn" style="background:#555" onclick="moverMes(-1)">◀ Mes Anterior</button>
+                <select id="monthSelect" onchange="seleccionarMes()" style="padding:8px; border-radius:4px; border:1px solid #ccc;">
+                </select>
+                <button class="btn" style="background:#555" onclick="moverMes(1)">Mes Siguiente ▶</button>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn" style="background:var(--primary);" onclick="downloadCalendarCSV()">Descargar Calendario CSV</button>
+                <button class="btn" style="background:var(--secondary);" onclick="printCalendarReport()">Descargar Calendario PDF</button>
+            </div>
+        </div>
+        <div class="calendar-grid" id="grid"></div>
+    </div>
+</div>
+
+<div id="unlockModal" class="modal-backdrop" onclick="if(event.target===this) closeUnlockModal();">
+    <div class="modal-card" onclick="event.stopPropagation();">
+        <h3>Desbloquear escuela</h3>
+        <p>Ingresa la contraseña administrativa para desbloquear la escuela y editarla. Los caracteres no se mostrarán.</p>
+        <label for="unlockPasswordInput">Contraseña</label>
+        <input id="unlockPasswordInput" type="password" autocomplete="current-password" placeholder="Ingresa tu clave" onkeydown="if(event.key==='Enter'){confirmUnlockSchool();}">
+        <div class="modal-actions">
+            <button class="btn" style="background:#e74c3c;" onclick="closeUnlockModal()">Cancelar</button>
+            <button class="btn" style="background:var(--secondary);" onclick="confirmUnlockSchool()">Desbloquear</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_UNLOCK_KEY = 'wolf0985$$';
+    let unlockRequestKey = null;
+    let db = JSON.parse(localStorage.getItem('escuelas_db')) || [];
+    let fechaVer = new Date();
+    normalizeDb();
+
+    // Mantener estado de UI (áreas y escuelas abiertas) para evitar que el UI "se cierre" al re-render
+    let openAreas = JSON.parse(sessionStorage.getItem('openAreas') || '{}');
+    let openSchools = JSON.parse(sessionStorage.getItem('openSchools') || '{}');
+    // Escuelas temporalmente desbloqueadas por admin (session-only)
+    let unlockedSchools = JSON.parse(sessionStorage.getItem('unlockedSchools') || '{}');
+
+    function verTab(t) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(t).classList.add('active');
+        if(t === 'reg') { document.getElementById('t1').classList.add('active'); renderTabla(); }
+        else if(t === 'asist') { document.getElementById('t3').classList.add('active'); renderAsistencias(); }
+        else { document.getElementById('t2').classList.add('active'); renderCal(); }
+    }
+
+function guardar() {
+        const r = document.getElementById('resp').value.trim().toUpperCase();
+        const f = document.getElementById('fini').value;
+        const ar = document.getElementById('area').value;
+        const tu = document.getElementById('tur').value; // Mantengo 'tur' como en tu HTML
+    const newStatus = document.getElementById('status') ? document.getElementById('status').value : 'Programado';
+        const id = parseInt(document.getElementById('idx').value);
+
+        if(!r || !f) return alert("⚠️ Responsable y Fecha son obligatorios.");
+
+        // Lógica de fechas según turno (solo días hábiles: lunes a sábado)
+        let totalDias = String(tu || '').toUpperCase().includes('FULL') ? 6 : 8;
+        let fechas = [];
+        let dIn = new Date(f + "T00:00:00");
+        while (fechas.length < totalDias) {
+            if (dIn.getDay() !== 0) {
+                fechas.push(dIn.toISOString().split('T')[0]);
+            }
+            dIn.setDate(dIn.getDate() + 1);
+        }
+
+        // --- NUEVA VALIDACIÓN DE SOLAPAMIENTO INTELIGENTE ---
+        const conflicto = db.find((e, i) => {
+            // 1. Saltamos si es la misma escuela que estamos editando o si es otro responsable
+            if (i === id || e.resp !== r) return false;
+
+            // 2. ¿Coinciden en alguna fecha?
+            const coincideFecha = e.fechas.some(fecha => fechas.includes(fecha));
+            if (!coincideFecha) return false;
+
+            // 3. Si coinciden en fecha, aplicamos reglas de turno:
+            const nuevoEsFull = String(tu).toUpperCase().includes('FULL');
+            const existenteEsFull = String(e.tur).toUpperCase().includes('FULL');
+
+            if (nuevoEsFull || existenteEsFull) {
+                return true; // Si cualquiera es FULL DAY, choca con todo
+            }
+            
+            // Si no hay FULL DAY, solo chocan si son el mismo turno (AM con AM o PM con PM)
+            return e.tur === tu;
+        });
+
+        if(conflicto) return alert(`❌ CONFLICTO: ${r} ya tiene asignada la escuela ${conflicto.rq} en el turno ${conflicto.tur} en estas fechas. No se permite duplicar el mismo turno o solapar con un FULL DAY.`);
+
+        // --- RESTO DEL CÓDIGO SE MANTIENE IGUAL ---
+        // evitar editar si la escuela ya está bloqueada
+        if (id !== -1 && isSchoolLocked(db[id].status, db[id].rq)) return alert('No se puede modificar esta escuela: está Finalizado/Cancelado.');
+        const item = {
+            rq: (id === -1) ? `${ar}-${(db.filter(e => e.area === ar).length + 1).toString().padStart(3,'0')}` : db[id].rq,
+            area: ar, resp: r, mot: document.getElementById('mot').value,
+            req: document.getElementById('req').value, tur: tu, fini: f, fechas: fechas,
+            alta: document.getElementById('falta').value || "Pendiente",
+            aprob: document.getElementById('aprob').value || 0,
+            status: newStatus,
+            obs: document.getElementById('obs').value,
+            participantes: (id === -1 ? [] : db[id].participantes || [])
+        };
+        if (id !== -1 && ['finalizado', 'cancelado'].includes(String(newStatus).toLowerCase())) {
+            delete unlockedSchools[db[id].rq];
+            sessionStorage.setItem('unlockedSchools', JSON.stringify(unlockedSchools));
+        }
+
+        if(id === -1) db.push(item); else db[id] = item;
+        
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        reset(); renderTabla(); renderDownloadFilters();
+        alert("✅ Información guardada correctamente.");
+    }
+    function getTurnoClass(tur) {
+        return String(tur || '').toLowerCase().replace(/\s+/g, '');
+    }
+
+    function getTurnoDias(tur) {
+        const turno = String(tur || '').toUpperCase();
+        if (turno.includes('FULL')) return { teoricos: 3, ojt: 3, label: '3 T + 3 OJT' };
+        return { teoricos: 3, ojt: 5, label: '3 T + 5 OJT' };
+    }
+
+    function isSchoolLocked(status, rq) {
+        if (rq && unlockedSchools[rq]) return false;
+        if (!status) return false;
+        const s = String(status || '').toLowerCase();
+        return s === 'finalizado' || s === 'cancelado';
+    }
+
+    function getDayAbbrev(day) {
+        const map = ['dom.', 'lun.', 'mar.', 'mié.', 'jue.', 'vier.', 'sáb.'];
+        return map[day] || '';
+    }
+
+    function formatFechaLabel(isoDate) {
+        if (!isoDate) return '';
+        const d = new Date(isoDate + 'T00:00:00');
+        if (Number.isNaN(d.getTime())) return isoDate;
+        const day = getDayAbbrev(d.getDay());
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yy = String(d.getFullYear()).slice(-2);
+        return `${day}${dd}.${mm}.${yy}`;
+    }
+
+    function normalizeDb() {
+        db = db.map(e => ({
+            ...e,
+            participantes: Array.isArray(e.participantes) ? e.participantes.map(p => ({
+                ...p,
+                kpis: p.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 },
+                kpiStatus: p.kpiStatus || ''
+            })) : [],
+            fechas: Array.isArray(e.fechas) ? e.fechas : [],
+            alta: e.alta || "Pendiente",
+            aprob: e.aprob || 0,
+            obs: e.obs || "",
+            status: e.status || 'Programado'
+        }));
+    }
+
+    function getEscuelasOrdenadas(area = '') {
+        return db
+            .filter(e => !area || e.area === area)
+            .slice()
+            .sort((a, b) => {
+                const da = new Date(a.fini), dbv = new Date(b.fini);
+                return da - dbv || String(a.rq).localeCompare(b.rq);
+            });
+    }
+
+    function renderAsistencias() {
+        const container = document.getElementById('asistAreasContainer');
+        const areas = Array.from(new Set(db.map(e => e.area))).sort();
+        if (!areas.length) {
+            document.getElementById('asistEmpty').style.display = 'block';
+            container.innerHTML = '';
+            return;
+        }
+        document.getElementById('asistEmpty').style.display = 'none';
+        container.innerHTML = areas.map(area => renderAreaPanel(area)).join('');
+    }
+
+    function renderAreaPanel(area) {
+        const escuelas = getEscuelasOrdenadas(area);
+        const areaOpen = !!openAreas[area];
+        return `<div class="accordion">
+            <div class="accordion-header" onclick="toggleArea('${area}')">
+                <span>${area}</span><span>${escuelas.length} escuela(s)</span>
+            </div>
+            <div class="accordion-body" id="area-${area}-content" style="display:${areaOpen ? 'block' : 'none'};">
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
+                    <span style="font-size:0.85em; color:#555;">Filtra por escuela y utiliza el panel de descargas para exportar.</span>
+                </div>
+                ${escuelas.map(renderSchoolCard).join('')}
+            </div>
+        </div>`;
+    }
+
+    function renderSchoolCard(escuela) {
+        const fechas = Array.isArray(escuela.fechas) ? escuela.fechas : [];
+        const participantes = Array.isArray(escuela.participantes) ? escuela.participantes : [];
+        const schoolOpen = !!openSchools[escuela.rq];
+        const locked = isSchoolLocked(escuela.status, escuela.rq);
+        return `<div class="school-card">
+            <div class="school-header" onclick="toggleSchool('${escuela.rq}')">
+                <div><strong>${escuela.rq}</strong> | ${escuela.resp} | Inicio: ${formatFechaLabel(escuela.fini)} | Turno: ${escuela.tur} | Estado: ${escuela.status || 'Programado'}</div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button class="btn btn-sm" style="background:var(--secondary);">VER</button>
+                </div>
+            </div>
+            <div class="school-body" id="school-${escuela.rq}-body" style="display:${schoolOpen ? 'block' : 'none'};">
+                <div class="form-grid" style="margin-top:10px;">
+                    <input type="hidden" id="idxAsist-${escuela.rq}" value="-1">
+                    <div><label>Nombre</label><input type="text" id="asistNombre-${escuela.rq}"></div>
+                    <div><label>Apellido</label><input type="text" id="asistApellido-${escuela.rq}"></div>
+                    <div><label>DNI</label><input type="text" id="asistDNI-${escuela.rq}"></div>
+                    <div><label>Teléfono</label><input type="text" id="asistTelefono-${escuela.rq}"></div>
+                    <div style="grid-column: span 1;"><label>Observaciones</label><textarea id="asistObs-${escuela.rq}" class="resize-both" rows="1"></textarea></div>
+                    <button ${locked ? 'disabled' : ''} class="btn small-btn" style="background:var(--secondary); grid-column: span 1; justify-self:start; width:auto;" onclick="guardarParticipante('${escuela.rq}')">AGREGAR PARTICIPANTE</button>
+                </div>
+                <table class="school-table">
+                    <thead>
+                        <tr>
+                            <th class="nowrap-cell">Nombre</th><th class="nowrap-cell">Apellido</th><th class="nowrap-cell">DNI</th><th class="nowrap-cell">Teléfono</th>
+                            ${fechas.map(fecha => `<th class="date-col">${formatFechaLabel(fecha)}</th>`).join('')}
+                            <th class="nowrap-cell">KPIs</th><th class="nowrap-cell">Estado KPI</th><th>Observaciones</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${participantes.length ? participantes.map((p, i) => renderParticipanteRow(escuela, p, i)).join('') : `<tr><td colspan="${7 + fechas.length}">No hay participantes en esta escuela.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+    }
+
+    function renderParticipanteRow(escuela, p, index) {
+        const fechas = Array.isArray(escuela.fechas) ? escuela.fechas : [];
+        const asistencia = Array.isArray(p.asistencia) ? p.asistencia : fechas.map(() => false);
+        const nombre = p.nombre || p.nom || '';
+        const apellido = p.apellido || p.ape || '';
+        const k = p.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 };
+        const locked = isSchoolLocked(escuela.status, escuela.rq);
+        return `<tr>
+            <td class="nowrap-cell">${nombre}</td>
+            <td class="nowrap-cell">${apellido}</td>
+            <td class="nowrap-cell">${p.dni || ''}</td>
+            <td class="nowrap-cell">${p.telefono || ''}</td>
+            ${fechas.map((fecha, diaIndex) => `
+                <td class="date-col"><input ${locked ? 'disabled' : ''} type="checkbox" ${asistencia[diaIndex] ? 'checked' : ''} onchange="toggleAsistencia('${escuela.rq}', ${index}, ${diaIndex}, this.checked)"></td>`).join('')}
+            <td class="nowrap-cell">
+                <span style="display:inline-block;padding:4px 6px;border-radius:6px;background:#eef;margin:2px;font-size:0.8em;">RA:${k.reuAgendadas||0}</span>
+                <span style="display:inline-block;padding:4px 6px;border-radius:6px;background:#e8f5e9;margin:2px;font-size:0.8em;">RC:${k.reusConcretadas||0}</span>
+                <span style="display:inline-block;padding:4px 6px;border-radius:6px;background:#fff3e0;margin:2px;font-size:0.8em;">L:${k.leads||0}</span>
+                <span style="display:inline-block;padding:4px 6px;border-radius:6px;background:#e3f2fd;margin:2px;font-size:0.8em;">S:${k.seguimientos||0}</span>
+                <span style="display:inline-block;padding:4px 6px;border-radius:6px;background:#ffebee;margin:2px;font-size:0.8em;">V:${k.ventas||0}</span>
+                <button ${locked ? 'disabled' : ''} class="btn btn-sm" style="background:var(--primary); margin-left:6px;" onclick="editarKpis('${escuela.rq}', ${index})">KPIs</button>
+            </td>
+            <td class="kpi-status-col"><select ${locked ? 'disabled' : ''} onchange="setKpiStatus('${escuela.rq}', ${index}, this.value)">
+                        <option value="">--</option>
+                        <option ${p.kpiStatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
+                        <option ${p.kpiStatus === 'Desaprobado' ? 'selected' : ''}>Desaprobado</option>
+                        <option ${p.kpiStatus === 'Deserción' ? 'selected' : ''}>Deserción</option>
+                        <option ${p.kpiStatus === 'Retirado' ? 'selected' : ''}>Retirado</option>
+                    </select></td>
+            <td><textarea class="resize-both" oninput="updateObservacion('${escuela.rq}', ${index}, this.value)">${p.obs || ''}</textarea></td>
+            <td><button ${locked ? 'disabled' : ''} class="btn btn-sm" style="background:var(--warning);" onclick="editarParticipante('${escuela.rq}', ${index})">✎</button> <button ${locked ? 'disabled' : ''} class="btn btn-sm" style="background:var(--danger);" onclick="borrarParticipante('${escuela.rq}', ${index})">X</button></td>
+        </tr>`;
+    }
+
+    function guardarParticipante(rq) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede modificar participantes: la escuela está Finalizado/Cancelado.');
+        const idx = parseInt(document.getElementById(`idxAsist-${rq}`).value, 10);
+        const nombre = document.getElementById(`asistNombre-${rq}`).value.trim();
+        const apellido = document.getElementById(`asistApellido-${rq}`).value.trim();
+        const dni = document.getElementById(`asistDNI-${rq}`).value.trim();
+        const telefono = document.getElementById(`asistTelefono-${rq}`).value.trim();
+        const obs = document.getElementById(`asistObs-${rq}`).value.trim();
+
+        if (!nombre || !apellido || !dni) return alert('⚠️ Nombre, apellido y DNI son obligatorios.');
+        const diasInfo = getTurnoDias(escuela.tur);
+        if (!Array.isArray(escuela.participantes)) escuela.participantes = [];
+        if (idx === -1) {
+            const participante = {
+                nombre,
+                apellido,
+                dni,
+                telefono,
+                obs,
+                dias: diasInfo.label,
+                teoricos: diasInfo.teoricos,
+                ojt: diasInfo.ojt,
+                asistencia: Array(escuela.fechas.length).fill(false),
+                kpis: { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 },
+                kpiStatus: ''
+            };
+            escuela.participantes.push(participante);
+        } else {
+            // actualizar campos del participante existente conservando kpis y kpiStatus
+            const existing = escuela.participantes[idx] || {};
+            existing.nombre = nombre; existing.apellido = apellido; existing.dni = dni; existing.telefono = telefono; existing.obs = obs;
+            existing.dias = diasInfo.label; existing.teoricos = diasInfo.teoricos; existing.ojt = diasInfo.ojt;
+            if (!Array.isArray(existing.asistencia)) existing.asistencia = Array(escuela.fechas.length).fill(false);
+            escuela.participantes[idx] = existing;
+        }
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        renderAsistencias();
+    }
+
+    function editarParticipante(rq, index) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, rq)) return alert('No se puede editar participantes: la escuela está Finalizado/Cancelado.');
+        const participante = escuela.participantes[index];
+        if (!participante) return;
+        // Abrir area y escuela en el estado y re-renderizar para mantener estructura
+        openAreas[escuela.area] = true; openSchools[rq] = true;
+        sessionStorage.setItem('openAreas', JSON.stringify(openAreas));
+        sessionStorage.setItem('openSchools', JSON.stringify(openSchools));
+        renderAsistencias();
+        // Restaurar valores en los inputs (renderAsistencias recrea DOM)
+        const idxEl = document.getElementById(`idxAsist-${rq}`);
+        const nomEl = document.getElementById(`asistNombre-${rq}`);
+        const apeEl = document.getElementById(`asistApellido-${rq}`);
+        const dniEl = document.getElementById(`asistDNI-${rq}`);
+        const telEl = document.getElementById(`asistTelefono-${rq}`);
+        const obsEl = document.getElementById(`asistObs-${rq}`);
+        if (idxEl) idxEl.value = index;
+        if (nomEl) nomEl.value = participante.nombre || participante.nom || '';
+        if (apeEl) apeEl.value = participante.apellido || participante.ape || '';
+        if (dniEl) dniEl.value = participante.dni || '';
+        if (telEl) telEl.value = participante.telefono || '';
+        if (obsEl) obsEl.value = participante.obs || '';
+    }
+
+    function borrarParticipante(rq, index) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede eliminar participantes: la escuela está Finalizado/Cancelado.');
+        if (!confirm('¿Seguro que deseas eliminar este participante?')) return;
+        escuela.participantes.splice(index, 1);
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        renderAsistencias();
+    }
+
+    function toggleAsistencia(rq, index, diaIndex, checked) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede modificar asistencia: la escuela está Finalizado/Cancelado.');
+        const participante = escuela.participantes[index];
+        if (!participante) return;
+        if (!Array.isArray(participante.asistencia)) participante.asistencia = Array(escuela.fechas.length).fill(false);
+        participante.asistencia[diaIndex] = checked;
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+    }
+
+    function updateObservacion(rq, index, value) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede modificar observaciones: la escuela está Finalizado/Cancelado.');
+        const participante = escuela.participantes[index];
+        if (!participante) return;
+        participante.obs = value;
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+    }
+
+    function editarKpis(rq, index) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se pueden editar KPIs: la escuela está Finalizado/Cancelado.');
+        const participante = escuela.participantes[index];
+        if (!participante) return;
+        participante.kpis = participante.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 };
+        const fields = [
+            { key: 'reuAgendadas', label: 'Reu Agendadas' },
+            { key: 'reusConcretadas', label: 'Reus Concretadas' },
+            { key: 'leads', label: 'Leads' },
+            { key: 'seguimientos', label: 'Seguimientos' },
+            { key: 'ventas', label: 'Ventas' }
+        ];
+        for (const f of fields) {
+            const current = participante.kpis[f.key] || 0;
+            const input = prompt(`${f.label} (número)`, String(current));
+            if (input === null) return; // cancel
+            const v = parseInt(input.replace(/\D/g, ''), 10);
+            participante.kpis[f.key] = isNaN(v) ? 0 : v;
+        }
+        // opcional: permitir ajustar estado KPI desde el prompt
+        const estadoActual = participante.kpiStatus || '';
+        const estado = prompt('Estado KPI (Aprobado, Desaprobado, Deserción, Retirado)', estadoActual);
+        if (estado !== null) {
+            const allowed = ['Aprobado','Desaprobado','Deserción','Retirado',''];
+            participante.kpiStatus = allowed.includes(estado) ? estado : estadoActual;
+        }
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        renderAsistencias();
+    }
+
+    function setKpiStatus(rq, index, value) {
+        const escuela = db.find(e => e.rq === rq);
+        if (!escuela || !Array.isArray(escuela.participantes)) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede modificar el estado KPI: la escuela está Finalizado/Cancelado.');
+        const participante = escuela.participantes[index];
+        if (!participante) return;
+        participante.kpiStatus = value || '';
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        renderAsistencias();
+    }
+
+    function attemptUnlockSchool(rq) {
+        unlockRequestKey = rq;
+        document.getElementById('unlockPasswordInput').value = '';
+        document.getElementById('unlockModal').classList.add('active');
+        document.getElementById('unlockPasswordInput').focus();
+    }
+
+    function closeUnlockModal() {
+        unlockRequestKey = null;
+        document.getElementById('unlockModal').classList.remove('active');
+    }
+
+    function confirmUnlockSchool() {
+        const clave = document.getElementById('unlockPasswordInput').value;
+        if (clave === '') return alert('⚠️ Ingresa la contraseña antes de continuar.');
+        if (clave === ADMIN_UNLOCK_KEY && unlockRequestKey) {
+            unlockedSchools[unlockRequestKey] = true;
+            sessionStorage.setItem('unlockedSchools', JSON.stringify(unlockedSchools));
+            const escuela = db.find(e => e.rq === unlockRequestKey);
+            if (escuela) {
+                escuela.status = 'En proceso';
+                localStorage.setItem('escuelas_db', JSON.stringify(db));
+            }
+            closeUnlockModal();
+            alert('✅ Escuela desbloqueada y marcada como "En proceso". Ahora puedes editarla.');
+            renderAsistencias(); renderTabla();
+        } else {
+            alert('🔒 Clave incorrecta. No se otorgó acceso.');
+        }
+    }
+
+    function toggleArea(area) {
+        const content = document.getElementById(`area-${area}-content`);
+        if (!content) return;
+        const newState = content.style.display === 'block' ? false : true;
+        content.style.display = newState ? 'block' : 'none';
+        openAreas[area] = newState;
+        sessionStorage.setItem('openAreas', JSON.stringify(openAreas));
+    }
+
+    function toggleSchool(rq) {
+        const body = document.getElementById(`school-${rq}-body`);
+        if (!body) return;
+        const newState = body.style.display === 'block' ? false : true;
+        body.style.display = newState ? 'block' : 'none';
+        openSchools[rq] = newState;
+        sessionStorage.setItem('openSchools', JSON.stringify(openSchools));
+    }
+
+    function renderTabla() {
+        const tb = document.getElementById('tbody');
+        tb.innerHTML = db.map((e, i) => {
+            const locked = isSchoolLocked(e.status, e.rq);
+            const actions = locked ? `<button class="btn btn-sm" style="background:#6c5ce7;" title="Escuela ${e.status} - bloqueada" onclick="event.stopPropagation(); attemptUnlockSchool('${e.rq}')">🔒</button>` : `<button onclick="editar(${i})">✎</button> <button onclick="borrar(${i})">X</button>`;
+            return `
+            <tr>
+                <td><b>${e.rq}</b></td><td>${e.resp}</td><td>${e.mot}</td><td>${e.req}</td>
+                <td>${contarParticipantesEscuela(e.rq)}</td>
+                <td><span class="post-it ${getTurnoClass(e.tur)}">${e.tur}</span></td>
+                <td>${formatFechaLabel(e.fechas[0])}</td><td>${formatFechaLabel(e.fechas[e.fechas.length - 1] || '')}</td>
+                <td style="color:${e.alta==='Pendiente'?'#999':'#27ae60'}">${e.alta}</td>
+                <td>${e.aprob}</td><td>${e.status || ''}</td><td class="obs-cell" title="${e.obs}">${e.obs || '-'}</td>
+                <td>${actions}</td>
+            </tr>
+        `}).join('');
+    }
+
+    const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    function getMonthLabel(isoDate) {
+        if (!isoDate) return '';
+        const d = new Date(isoDate + 'T00:00:00');
+        if (Number.isNaN(d.getTime())) return '';
+        return monthNames[d.getMonth()] || '';
+    }
+
+    function sortMonthLabels(a, b) {
+        return monthNames.indexOf(a) - monthNames.indexOf(b);
+    }
+
+    function getCurrentDownloadFilters() {
+        const selected = id => Array.from(document.getElementById(id)?.selectedOptions || []).map(o => o.value).filter(v => v !== '');
+        return {
+            areas: selected('filterArea'),
+            escuelas: selected('filterEscuela'),
+            responsables: selected('filterResp'),
+            inicioMeses: selected('filterInicioMes'),
+            cierreMeses: selected('filterEndMonth'),
+            años: selected('filterYear'),
+            formatos: selected('filterFormat')
+        };
+    }
+
+    function ensureSelected(values, allOptions) {
+        return (values && values.length) ? values : allOptions;
+    }
+
+    function applySchoolFilters(schools, filters) {
+        const allAreas = Array.from(new Set(db.map(e => e.area))).sort();
+        const allEscuelas = Array.from(new Set(db.map(e => e.rq))).sort((a,b) => String(a).localeCompare(b));
+        const allResponsables = Array.from(new Set(db.map(e => e.resp))).sort();
+        const allInicioMeses = Array.from(new Set(db.map(e => getMonthLabel(e.fini)))).sort(sortMonthLabels);
+        const allCierreMeses = Array.from(new Set(db.map(e => getMonthLabel((e.fechas && e.fechas.length ? e.fechas[e.fechas.length - 1] : e.fini))))).sort(sortMonthLabels);
+        const allYears = Array.from(new Set(db.map(e => new Date(e.fini + 'T00:00:00').getFullYear().toString()))).sort((a,b) => a - b);
+
+        const selectedAreas = ensureSelected(filters.areas, allAreas);
+        const selectedEscuelas = ensureSelected(filters.escuelas, allEscuelas);
+        const selectedResponsables = ensureSelected(filters.responsables, allResponsables);
+        const selectedInicioMeses = ensureSelected(filters.inicioMeses, allInicioMeses);
+        const selectedCierreMeses = ensureSelected(filters.cierreMeses, allCierreMeses);
+        const selectedYears = ensureSelected(filters.años, allYears);
+
+        return schools.filter(e => {
+            const inicioMes = getMonthLabel(e.fini);
+            const cierreMes = getMonthLabel((e.fechas && e.fechas.length ? e.fechas[e.fechas.length - 1] : e.fini));
+            const inicioYear = new Date(e.fini + 'T00:00:00').getFullYear().toString();
+            return selectedAreas.includes(e.area)
+                && selectedEscuelas.includes(e.rq)
+                && selectedResponsables.includes(e.resp)
+                && selectedInicioMeses.includes(inicioMes)
+                && selectedCierreMeses.includes(cierreMes)
+                && selectedYears.includes(inicioYear);
+        });
+    }
+
+    function renderDownloadFilters() {
+        const areaOptions = Array.from(new Set(db.map(e => e.area))).sort();
+        const escuelaOptions = Array.from(new Set(db.map(e => e.rq))).sort((a,b) => String(a).localeCompare(b));
+        const respOptions = Array.from(new Set(db.map(e => e.resp))).sort();
+        const inicioOptions = Array.from(new Set(db.map(e => getMonthLabel(e.fini)))).sort(sortMonthLabels);
+        const cierreOptions = Array.from(new Set(db.map(e => getMonthLabel((e.fechas && e.fechas.length ? e.fechas[e.fechas.length - 1] : e.fini))))).sort(sortMonthLabels);
+        const yearOptions = Array.from(new Set(db.map(e => new Date(e.fini + 'T00:00:00').getFullYear().toString()))).sort((a,b) => a - b);
+
+        const build = (id, values) => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            select.innerHTML = values.map(v => `<option value="${v}" selected>${v}</option>`).join('');
+        };
+        build('filterArea', areaOptions);
+        build('filterEscuela', escuelaOptions);
+        build('filterResp', respOptions);
+        build('filterInicioMes', inicioOptions);
+        build('filterEndMonth', cierreOptions);
+        build('filterYear', yearOptions);
+    }
+
+    function collectParticipantesForFilters(filters) {
+        const participantes = [];
+        applySchoolFilters(db, filters).forEach(escuela => {
+            if (!Array.isArray(escuela.participantes)) return;
+            const escuelaLabel = `${escuela.rq} - ${escuela.resp}`;
+            escuela.participantes.forEach(p => {
+                const kpis = p.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 };
+                participantes.push({
+                    area: escuela.area,
+                    escuela: escuelaLabel,
+                    rq: escuela.rq,
+                    escuelaStatus: escuela.status || '',
+                    nombre: p.nombre || p.nom || '',
+                    apellido: p.apellido || p.ape || '',
+                    dni: p.dni || '',
+                    telefono: p.telefono || '',
+                    dias: p.dias || '',
+                    teoricos: p.teoricos || '',
+                    ojt: p.ojt || '',
+                    obs: p.obs || '',
+                    kpiStatus: p.kpiStatus || '',
+                    asistencia: Array.isArray(p.asistencia) ? p.asistencia : [],
+                    kpis
+                });
+            });
+        });
+        return participantes;
+    }
+
+    function downloadEscuelasCSVFiltered(filters) {
+        const escuelas = applySchoolFilters(db, filters);
+        if (!escuelas.length) return alert('No hay escuelas que cumplan los filtros seleccionados.');
+        const rows = [["RQ","Área","Responsable","Motivo","Req","Turno","Fecha Inicio","Fecha Fin","Alta","Aprobados","Observaciones"]];
+        escuelas.forEach(e => rows.push([e.rq, e.area, e.resp, e.mot, e.req, e.tur, formatFechaLabel(e.fini), formatFechaLabel(e.fechas[e.fechas.length - 1] || ''), e.alta, e.aprob, e.obs]));
+        downloadCSV(rows, `Reporte General de Escuelas Filtrado ${new Date().getFullYear()}.csv`, getDownloadMetadataRows('Reporte General de Escuelas Filtrado'));
+    }
+
+    function printEscuelasReportFiltered(filters) {
+        const escuelas = applySchoolFilters(db, filters);
+        if (!escuelas.length) return alert('No hay escuelas que cumplan los filtros seleccionados.');
+        const rows = escuelas.map(e => `<tr><td>${e.rq}</td><td>${e.area}</td><td>${e.resp}</td><td>${e.mot}</td><td>${e.req}</td><td>${e.tur}</td><td>${formatFechaLabel(e.fini)}</td><td>${formatFechaLabel(e.fechas[e.fechas.length - 1] || '')}</td><td>${e.alta}</td><td>${e.aprob}</td><td>${e.obs}</td></tr>`).join('');
+        const html = `${getReportHeaderHtml('Reporte General de Escuelas Filtrado')}<table><thead><tr><th>RQ</th><th>Área</th><th>Responsable</th><th>Motivo</th><th>Req</th><th>Turno</th><th>Inicio</th><th>Fin</th><th>Alta</th><th>Aprobados</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>${getReportFooterHtml()}`;
+        openPrintWindow('Reporte General de Escuelas Filtrado', html);
+    }
+
+    function downloadParticipantesFilteredCSV(filters) {
+        const participantes = collectParticipantesForFilters(filters);
+        if (!participantes.length) return alert('No hay participantes que cumplan los filtros seleccionados.');
+        const rows = [["Área","Escuela","RQ","Estado Escuela","Nombre","Apellido","DNI","Teléfono","Días","Teóricos","OJT","Reu Agendadas","Reus Concretadas","Leads","Seguimientos","Ventas","Estado KPI","Observaciones"]];
+        participantes.forEach(p => rows.push([p.area, p.escuela, p.rq, p.escuelaStatus, p.nombre, p.apellido, p.dni, p.telefono, p.dias, p.teoricos, p.ojt, p.kpis.reuAgendadas || 0, p.kpis.reusConcretadas || 0, p.kpis.leads || 0, p.kpis.seguimientos || 0, p.kpis.ventas || 0, p.kpiStatus || '', p.obs]));
+        downloadCSV(rows, `Reporte General de Participantes Filtrado ${new Date().getFullYear()}.csv`, getDownloadMetadataRows('Reporte General de Participantes Filtrado'));
+    }
+
+    function printParticipantesFiltered(filters) {
+        const participantes = collectParticipantesForFilters(filters);
+        if (!participantes.length) return alert('No hay participantes que cumplan los filtros seleccionados.');
+        const rows = participantes.map(p => `<tr><td>${p.area}</td><td>${p.escuela}</td><td>${p.rq}</td><td>${p.escuelaStatus}</td><td>${p.nombre}</td><td>${p.apellido}</td><td>${p.dni}</td><td>${p.telefono}</td><td>${p.dias}</td><td>${p.teoricos}</td><td>${p.ojt}</td><td>${p.kpis.reuAgendadas || 0}</td><td>${p.kpis.reusConcretadas || 0}</td><td>${p.kpis.leads || 0}</td><td>${p.kpis.seguimientos || 0}</td><td>${p.kpis.ventas || 0}</td><td>${p.kpiStatus || ''}</td><td>${p.obs}</td></tr>`).join('');
+        const html = `${getReportHeaderHtml('Reporte General de Participantes Filtrado')}<table><thead><tr><th>Área</th><th>Escuela</th><th>RQ</th><th>Estado Escuela</th><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Teléfono</th><th>Días</th><th>Teóricos</th><th>OJT</th><th>Reu Agendadas</th><th>Reus Concretadas</th><th>Leads</th><th>Seguimientos</th><th>Ventas</th><th>Estado KPI</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>${getReportFooterHtml()}`;
+        openPrintWindow('Reporte General de Participantes Filtrado', html);
+    }
+
+    function exportFilteredSchools() {
+        const filters = getCurrentDownloadFilters();
+        if (filters.formatos.includes('CSV')) downloadEscuelasCSVFiltered(filters);
+        if (filters.formatos.includes('PDF')) printEscuelasReportFiltered(filters);
+        if (!filters.formatos.length) alert('Selecciona al menos un formato.');
+    }
+
+    function exportFilteredParticipantes() {
+        const filters = getCurrentDownloadFilters();
+        if (filters.formatos.includes('CSV')) downloadParticipantesFilteredCSV(filters);
+        if (filters.formatos.includes('PDF')) printParticipantesFiltered(filters);
+        if (!filters.formatos.length) alert('Selecciona al menos un formato.');
+    }
+
+    function exportFilteredData() {
+        const filters = getCurrentDownloadFilters();
+        const type = document.getElementById('filterExportType')?.value || 'schools';
+        if (!filters.formatos.length) return alert('Selecciona al menos un formato.');
+
+        if (type === 'schools') {
+            if (filters.formatos.includes('CSV')) downloadEscuelasCSVFiltered(filters);
+            if (filters.formatos.includes('PDF')) printEscuelasReportFiltered(filters);
+            return;
+        }
+
+        if (type === 'schoolsWithParticipants') {
+            if (filters.formatos.includes('CSV')) downloadParticipantesFilteredCSV(filters);
+            if (filters.formatos.includes('PDF')) printParticipantesFiltered(filters);
+            return;
+        }
+    }
+
+    function contarParticipantesEscuela(rq) {
+        const bolsa = JSON.parse(localStorage.getItem('bolsa_db')) || [];
+        const matches = bolsa.filter(item => item.escuela === rq || item.escuelaRq === rq || item.rq === rq);
+        if (matches.length) return matches.length;
+        const escuela = db.find(item => item.rq === rq);
+        if (!escuela) return 0;
+        if (Array.isArray(escuela.participantes)) return escuela.participantes.length;
+        const count = parseInt(escuela.participantes || escuela.bolsa || 0, 10);
+        return isNaN(count) ? 0 : count;
+    }
+
+    function tieneParticipantesEnBolsa(rq) {
+        return contarParticipantesEscuela(rq) > 0;
+    }
+
+    function renderCal() {
+        const g = document.getElementById('grid');
+        if (!g) return;
+        
+        // Obtener mes y año del selector o de la fecha actual
+        const monthSelect = document.getElementById('monthSelect');
+        const y = fechaVer.getFullYear();
+        const m = fechaVer.getMonth();
+        
+        const mesTxt = new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'}).format(fechaVer).toUpperCase();
+        
+        // Actualizar títulos (para pantalla y para PDF)
+        if(monthSelect) monthSelect.value = m;
+        const tituloPDF = document.getElementById('mesTituloPDF');
+        if(tituloPDF) {
+            tituloPDF.innerText = "CALENDARIO DE ESCUELAS - " + mesTxt;
+            tituloPDF.style.display = "block";
+        }
+
+        g.innerHTML = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"].map(x => `<div class="calendar-header">${x}</div>`).join('');
+
+        const fDay = new Date(y, m, 1).getDay();
+        const gap = (fDay === 0) ? 6 : fDay - 1;
+        const total = new Date(y, m + 1, 0).getDate();
+
+        for(let i=0; i<gap; i++) g.innerHTML += `<div class="calendar-day" style="background:#f5f5f5"></div>`;
+
+        for(let d=1; d<=total; d++) {
+            const hoy = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            const items = db.filter(e => e.fechas.includes(hoy));
+            
+            let html = items.map(e => `
+                <div class="post-it ${e.tur.toLowerCase().replace(/\s+/g, '')}">
+                    <b>${e.rq}</b>
+                    ${e.resp.split(' ')[0]}
+                    <div style="font-size:0.75em; margin-top:4px; color:#555;">${e.status || 'Programado'}</div>
+                </div>`).join('');
+            
+            g.innerHTML += `<div class="calendar-day"><span class="day-num">${d}</span>${html}</div>`;
+        }
+    }
+    function renderMonthSelect() {
+        const select = document.getElementById('monthSelect');
+        const year = fechaVer.getFullYear();
+        const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        select.innerHTML = months.map((name, index) => `<option value="${index}">${name} ${year}</option>`).join('');
+        select.value = fechaVer.getMonth();
+    }
+
+    function seleccionarMes() {
+        const select = document.getElementById('monthSelect');
+        fechaVer.setMonth(parseInt(select.value, 10));
+        renderCal();
+    }
+
+    function getDownloadTimestamp() {
+        const now = new Date();
+        return new Intl.DateTimeFormat('es-PE', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }).format(now);
+    }
+
+    function getDownloadMetadataRows(title) {
+        return [
+            [`Descarga generada: ${getDownloadTimestamp()}`],
+            [`${title}`],
+            [],
+        ];
+    }
+
+    function getDownloadFooterRow() {
+        return [
+            [`Av. Circunvalación del Golf los Inkas 206, torre 3, oficina3 oficina 806B, Santiago de Surco WHATSAPP: 908 849 179 | WWW.UBILLUSYASOCIADOS.COM UBILLUS & PARTNERS SAC - 20611705311`]
+        ];
+    }
+
+    function sanitizeCsvCell(cell) {
+        return String(cell ?? '').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function downloadCSV(rows, filename, metadataRows = []) {
+        const fileRows = [];
+        if (metadataRows && metadataRows.length) {
+            fileRows.push(...metadataRows);
+            fileRows.push([]);
+        }
+        fileRows.push(...rows);
+        if (metadataRows && metadataRows.length) {
+            fileRows.push([]);
+            fileRows.push(...getDownloadFooterRow());
+        }
+        const csv = fileRows.map(r => r.map(cell => `"${sanitizeCsvCell(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+    }
+
+    function openPrintWindow(title, htmlContent) {
+        const win = window.open('', '_blank');
+        if (!win) return alert('No se pudo abrir la ventana de impresión.');
+        win.document.write(`<!DOCTYPE html><html><head><title>${title}</title><style>html,body{height:100%;margin:0;}body{font-family:sans-serif;padding:20px;font-size:12px;display:flex;flex-direction:column;min-height:100vh;}table{width:100%;border-collapse:collapse;font-size:11px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}th{background:#f0f0f0;} .report-header{text-align:center;margin-bottom:16px;} .report-header .timestamp{font-size:0.85em;color:#555;} .report-footer{text-align:center;margin-top:auto;font-size:0.8em;color:#555;line-height:1.3;} .nowrap-cell{white-space:nowrap;}</style></head><body>${htmlContent}</body></html>`);
+        win.document.close();
+        win.focus();
+        win.print();
+    }
+
+    function getReportHeaderHtml(title) {
+        return `<div class="report-header"><div class="timestamp">Descarga generada: ${getDownloadTimestamp()}</div><h1 style="margin:6px 0;">${title}</h1></div>`;
+    }
+
+    function getReportFooterHtml() {
+        return `<div class="report-footer">Av. Circunvalación del Golf los Inkas 206, torre 3, oficina3 oficina 806B, Santiago de Surco<br>WHATSAPP: 908 849 179 | WWW.UBILLUSYASOCIADOS.COM UBILLUS & PARTNERS SAC - 20611705311</div>`;
+    }
+
+    function downloadEscuelasCSV() {
+        const year = new Date().getFullYear();
+        const rows = [["RQ","Área","Responsable","Motivo","Req","Turno","Fecha Inicio","Fecha Fin","Alta","Aprobados","Observaciones"]];
+        db.forEach(e => rows.push([e.rq, e.area, e.resp, e.mot, e.req, e.tur, formatFechaLabel(e.fini), formatFechaLabel(e.fechas[e.fechas.length - 1] || ''), e.alta, e.aprob, e.obs]));
+        downloadCSV(rows, `Reporte General de Escuelas ${year}.csv`, getDownloadMetadataRows('Reporte General de Escuelas'));
+    }
+
+    function printEscuelasReport() {
+        const rows = db.map(e => `<tr><td>${e.rq}</td><td>${e.area}</td><td>${e.resp}</td><td>${e.mot}</td><td>${e.req}</td><td>${e.tur}</td><td>${e.fini}</td><td>${e.fechas[e.fechas.length - 1] || ''}</td><td>${e.alta}</td><td>${e.aprob}</td><td>${e.obs}</td></tr>`).join('');
+        const html = `${getReportHeaderHtml('Reporte General de Escuelas')}<table><thead><tr><th>RQ</th><th>Área</th><th>Responsable</th><th>Motivo</th><th>Req</th><th>Turno</th><th>Inicio</th><th>Fin</th><th>Alta</th><th>Aprobados</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>${getReportFooterHtml()}`;
+        openPrintWindow('Reporte General de Escuelas', html);
+    }
+
+    function collectParticipantes(scope, area, rq) {
+        const participantes = [];
+        db.forEach(escuela => {
+            if (scope === 'area' && escuela.area !== area) return;
+            if (scope === 'school' && escuela.rq !== rq) return;
+            if (scope === 'general' || scope === 'area' || scope === 'school') {
+                const escuelaLabel = `${escuela.rq} - ${escuela.resp}`;
+                (escuela.participantes || []).forEach(p => {
+                    const kpis = p.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 };
+                    participantes.push({
+                        area: escuela.area,
+                        escuela: escuelaLabel,
+                        rq: escuela.rq,
+                        nombre: p.nombre || p.nom || '',
+                        apellido: p.apellido || p.ape || '',
+                        dni: p.dni || '',
+                        telefono: p.telefono || '',
+                        dias: p.dias || '',
+                        teoricos: p.teoricos || '',
+                        ojt: p.ojt || '',
+                        obs: p.obs || '',
+                        kpiStatus: p.kpiStatus || '',
+                        asistencia: Array.isArray(p.asistencia) ? p.asistencia : [],
+                        kpis
+                    });
+                });
+            }
+        });
+        return participantes;
+    }
+
+    function downloadParticipantesCSV(scope, area, rq) {
+        const rows = [["Área","Escuela","RQ","Nombre","Apellido","DNI","Teléfono","Días","Teóricos","OJT","Reu Agendadas","Reus Concretadas","Leads","Seguimientos","Ventas","Estado KPI","Observaciones"]];
+        collectParticipantes(scope, area, rq).forEach(p => rows.push([
+            p.area, p.escuela, p.rq, p.nombre, p.apellido, p.dni, p.telefono, p.dias, p.teoricos, p.ojt,
+            p.kpis.reuAgendadas || 0,
+            p.kpis.reusConcretadas || 0,
+            p.kpis.leads || 0,
+            p.kpis.seguimientos || 0,
+            p.kpis.ventas || 0,
+            p.kpiStatus || '',
+            p.obs
+        ]));
+        let filename = 'Reporte general de participantes.csv';
+        if (scope === 'area') filename = `Reporte general de participantes ${area}.csv`;
+        if (scope === 'school') filename = `Reporte general de participantes ${area} ${rq}.csv`;
+        downloadCSV(rows, filename, getDownloadMetadataRows('Reporte general de participantes'));
+    }
+
+    function printParticipantesReport(scope, area, rq) {
+        const participantes = collectParticipantes(scope, area, rq);
+        let title = 'Reporte general de participantes';
+        if (scope === 'area') title = `Reporte general de participantes ${area}`;
+        if (scope === 'school') title = `Reporte general de participantes ${area} ${rq}`;
+        const rows = participantes.map(p => `<tr><td>${p.area}</td><td>${p.escuela}</td><td>${p.rq}</td><td>${p.nombre}</td><td>${p.apellido}</td><td>${p.dni}</td><td>${p.telefono}</td><td>${p.dias}</td><td>${p.teoricos}</td><td>${p.ojt}</td><td>${p.kpis.reuAgendadas || 0}</td><td>${p.kpis.reusConcretadas || 0}</td><td>${p.kpis.leads || 0}</td><td>${p.kpis.seguimientos || 0}</td><td>${p.kpis.ventas || 0}</td><td>${p.kpiStatus || ''}</td><td>${p.obs}</td></tr>`).join('');
+        const html = `${getReportHeaderHtml(title)}<table><thead><tr><th class="nowrap-cell">Área</th><th class="nowrap-cell">Escuela</th><th class="nowrap-cell">RQ</th><th class="nowrap-cell">Nombre</th><th class="nowrap-cell">Apellido</th><th>DNI</th><th>Teléfono</th><th>Días</th><th>Teóricos</th><th>OJT</th><th>Reu Agendadas</th><th>Reus Concretadas</th><th>Leads</th><th>Seguimientos</th><th>Ventas</th><th>Estado KPI</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>${getReportFooterHtml()}`;
+        openPrintWindow(title, html);
+    }
+
+    function downloadCalendarCSV() {
+        const monthName = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(fechaVer);
+        const rows = [["Fecha","Escuelas"]];
+        const y = fechaVer.getFullYear();
+        const m = fechaVer.getMonth();
+        const total = new Date(y, m + 1, 0).getDate();
+        for (let d = 1; d <= total; d++) {
+            const hoy = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            const items = db.filter(e => e.fechas.includes(hoy)).map(e => e.rq).join(' | ');
+            rows.push([hoy, items]);
+        }
+        downloadCSV(rows, `${monthName}_${y}.csv`, getDownloadMetadataRows(`Calendario ${monthName} ${y}`));
+    }
+
+    function printCalendarReport() {
+        const monthName = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(fechaVer);
+        const y = fechaVer.getFullYear();
+        const m = fechaVer.getMonth();
+        const firstDay = new Date(y, m, 1).getDay();
+        const gap = (firstDay === 0) ? 6 : firstDay - 1;
+        const total = new Date(y, m + 1, 0).getDate();
+        const weeks = [];
+        let currentWeek = Array(gap).fill('');
+
+        for (let d = 1; d <= total; d++) {
+            const hoy = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            const items = db.filter(e => e.fechas.includes(hoy)).map(e => `${e.rq} (${e.tur})`).join('<br>');
+            currentWeek.push(`<div class="calendar-day-print"><strong>${d}</strong>${items ? '<div class="calendar-items">' + items + '</div>' : ''}</div>`);
+            if (currentWeek.length === 7) {
+                weeks.push(currentWeek);
+                currentWeek = [];
+            }
+        }
+        while (currentWeek.length < 7) currentWeek.push('');
+        if (currentWeek.some(cell => cell !== '')) weeks.push(currentWeek);
+
+        const rows = weeks.map(week => `<tr>${week.map(cell => `<td style="vertical-align:top; padding:10px; border:1px solid #ccc; min-height:100px;">${cell}</td>`).join('')}</tr>`).join('');
+        const title = `${monthName} ${y}`;
+        const html = `${getReportHeaderHtml(title)}<table style="width:100%;border-collapse:collapse;"><thead><tr>${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(day => `<th style="border:1px solid #ccc;padding:10px;background:#f0f0f0;">${day}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>${getReportFooterHtml()}`;
+        openPrintWindow(title, html);
+    }
+
+    function editar(i) {
+        const e = db[i];
+        document.getElementById('idx').value = i;
+        document.getElementById('resp').value = e.resp;
+        document.getElementById('fini').value = e.fini;
+        document.getElementById('tur').value = e.tur;
+        document.getElementById('area').value = e.area;
+        document.getElementById('req').value = e.req;
+        document.getElementById('mot').value = e.mot;
+        document.getElementById('obs').value = e.obs || "";
+        document.getElementById('falta').value = e.alta !== "Pendiente" ? e.alta : "";
+        document.getElementById('aprob').value = e.aprob;
+        if (document.getElementById('status')) document.getElementById('status').value = e.status || 'Programado';
+        const saveBtn = document.querySelector('button[onclick="guardar()"]');
+        if (isSchoolLocked(e.status, e.rq)) {
+            // deshabilitar edición si la escuela está Finalizado/Cancelado
+            ['resp','fini','tur','area','req','mot','falta','aprob','obs','status'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
+            if (saveBtn) saveBtn.disabled = true;
+        } else {
+            ['resp','fini','tur','area','req','mot','falta','aprob','obs','status'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = false; });
+            if (saveBtn) saveBtn.disabled = false;
+        }
+
+        document.getElementById('extraFields').style.display = "flex";
+        window.scrollTo(0,0);
+    }
+
+    function reset() {
+        document.getElementById('idx').value = "-1";
+        document.getElementById('resp').value = "";
+        document.getElementById('fini').value = "";
+        document.getElementById('req').value = "0";
+        document.getElementById('obs').value = "";
+        document.getElementById('extraFields').style.display = "none";
+        // reenabling fields in case they were disabled for a locked school
+        ['resp','fini','tur','area','req','mot','falta','aprob','obs','status'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = false; });
+        const saveBtn = document.querySelector('button[onclick="guardar()"]'); if (saveBtn) saveBtn.disabled = false;
+    }
+
+    function borrar(i) {
+        const escuela = db[i];
+        if (!escuela) return;
+        if (isSchoolLocked(escuela.status, escuela.rq)) return alert('No se puede eliminar esta escuela: está Finalizado/Cancelado.');
+        if (tieneParticipantesEnBolsa(escuela.rq)) {
+            return alert(`❌ No se puede eliminar ${escuela.rq} porque tiene participantes en la bolsa.`);
+        }
+        if (confirm("¿Seguro que deseas eliminar este registro?")) {
+            db.splice(i,1);
+            localStorage.setItem('escuelas_db', JSON.stringify(db));
+            renderTabla();
+        }
+    }
+    function moverMes(v) { fechaVer.setMonth(fechaVer.getMonth() + v); renderCal(); renderMonthSelect(); }
+
+    async function exportarData() {
+        const blob = new Blob([JSON.stringify(db, null, 2)], {type: "application/json"});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "base_escuelas_2026.json"; a.click();
+    }
+
+    function importarData(ev) {
+        const r = new FileReader();
+        r.onload = (e) => { db = JSON.parse(e.target.result); normalizeDb(); localStorage.setItem('escuelas_db', JSON.stringify(db)); renderTabla(); renderMonthSelect(); renderDownloadFilters(); };
+        r.readAsText(ev.target.files[0]);
+    }
+
+    window.onload = () => { renderTabla(); renderMonthSelect(); renderDownloadFilters(); };
+</script>
+</body>
+</html>

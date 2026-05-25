@@ -1,0 +1,10 @@
+# Ignorar archivos temporales comunes de sistemas
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de editor / VS Code
+.vscode/
+
+# Ignorar archivos de respaldo
+*~
+*.bak
