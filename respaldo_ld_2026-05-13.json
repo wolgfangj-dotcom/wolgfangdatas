@@ -1,267 +1,285 @@
-[
-  {
-    "rq": "LIC-PE-001",
-    "area": "LIC-PE",
-    "resp": "WOLGFANG JIMENEZ",
-    "mot": "DOTACION",
-    "req": "2",
-    "tur": "FULL DAY",
-    "fini": "2026-05-14",
-    "fechas": [
-      "2026-05-14",
-      "2026-05-15",
-      "2026-05-16",
-      "2026-05-18",
-      "2026-05-19",
-      "2026-05-20"
-    ],
-    "alta": "Pendiente",
-    "aprob": "0",
-    "status": "En proceso",
-    "obs": "se esta llevando como full time a la espera de la programación de Colombia",
-    "participantes": [
-      {
-        "nombre": "JESÚS RAFAEL",
-        "apellido": "POMA CÁCERES",
-        "dni": "12345678",
-        "telefono": "913812705",
-        "obs": "se le nota distraido, muy dependiente no poca proactividad",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          true,
-          false,
-          true,
-          true
-        ],
-        "kpis": {
-          "reuAgendadas": 8,
-          "reusConcretadas": 4,
-          "leads": 73,
-          "seguimientos": 17,
-          "ventas": 0
+{
+  "data": [
+    {
+      "rq": "LIC-PE-001",
+      "area": "LIC-PE",
+      "resp": "WOLGFANG JIMENEZ",
+      "mot": "DOTACION",
+      "req": "2",
+      "tur": "FULL DAY",
+      "fini": "2026-05-14",
+      "fechas": [
+        "2026-05-14",
+        "2026-05-15",
+        "2026-05-16",
+        "2026-05-18",
+        "2026-05-19",
+        "2026-05-20"
+      ],
+      "alta": "Pendiente",
+      "aprob": "0",
+      "status": "En proceso",
+      "obs": "se esta llevando como full time a la espera de la programación de Colombia",
+      "participantes": [
+        {
+          "nombre": "JESÚS RAFAEL",
+          "apellido": "POMA CÁCERES",
+          "dni": "12345678",
+          "telefono": "913812705",
+          "obs": "se le nota distraido, muy dependiente no poca proactividad",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            true,
+            false,
+            true,
+            true
+          ],
+          "kpis": {
+            "reuAgendadas": 8,
+            "reusConcretadas": 4,
+            "leads": 73,
+            "seguimientos": 17,
+            "ventas": 0
+          },
+          "kpiStatus": "Aprobado"
+        }
+      ]
+    },
+    {
+      "rq": "LIC-CO-001",
+      "area": "LIC-CO",
+      "resp": "AUXILIAR 1",
+      "mot": "DOTACION",
+      "req": "2",
+      "tur": "FULL DAY",
+      "fini": "2026-05-19",
+      "fechas": [
+        "2026-05-19",
+        "2026-05-20",
+        "2026-05-21",
+        "2026-05-22",
+        "2026-05-23",
+        "2026-05-25"
+      ],
+      "alta": "2026-05-22",
+      "aprob": "1",
+      "status": "Finalizado",
+      "obs": "Se brinda apoto por videos capacitacion realizada de manera asincronica por cruce de fechas",
+      "participantes": [
+        {
+          "nombre": "Sandra Milena",
+          "apellido": "Martinez Vargas",
+          "dni": "123456789",
+          "telefono": "+57 3114883119",
+          "obs": "Se le brindó material desde el día viernes 15/05, tras dos feriados se incorpora 19/05 a mi escuela.",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "kpis": {
+            "reuAgendadas": 0,
+            "reusConcretadas": 0,
+            "leads": 0,
+            "seguimientos": 0,
+            "ventas": 0
+          },
+          "kpiStatus": "Aprobado"
         },
-        "kpiStatus": "Aprobado"
-      }
-    ]
-  },
-  {
-    "rq": "LIC-CO-001",
-    "area": "LIC-CO",
-    "resp": "AUXILIAR 1",
-    "mot": "DOTACION",
-    "req": "2",
-    "tur": "FULL DAY",
-    "fini": "2026-05-19",
-    "fechas": [
-      "2026-05-19",
-      "2026-05-20",
-      "2026-05-21",
-      "2026-05-22",
-      "2026-05-23",
-      "2026-05-25"
-    ],
-    "alta": "2026-05-22",
-    "aprob": "1",
-    "status": "Finalizado",
-    "obs": "Se brinda apoto por videos capacitacion realizada de manera asincronica por cruce de fechas",
-    "participantes": [
-      {
-        "nombre": "Sandra Milena",
-        "apellido": "Martinez Vargas",
-        "dni": "123456789",
-        "telefono": "+57 3114883119",
-        "obs": "Se le brindó material desde el día viernes 15/05, tras dos feriados se incorpora 19/05 a mi escuela.",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          false,
-          false,
-          false,
-          false
-        ],
-        "kpis": {
-          "reuAgendadas": 0,
-          "reusConcretadas": 0,
-          "leads": 0,
-          "seguimientos": 0,
-          "ventas": 0
+        {
+          "nombre": "Oscar Andrés",
+          "apellido": "Alvarez Corredor",
+          "dni": "79890748",
+          "telefono": "3102199646",
+          "obs": "No tenia claro los temas de pagos y se retiró, demuestra actitud conflictiva.",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "kpis": {
+            "reuAgendadas": 0,
+            "reusConcretadas": 0,
+            "leads": 0,
+            "seguimientos": 0,
+            "ventas": 0
+          },
+          "kpiStatus": "Retirado"
+        }
+      ]
+    },
+    {
+      "rq": "CAP-PE-001",
+      "area": "CAP-PE",
+      "resp": "JUNIOR BARBOZA",
+      "mot": "DOTACION",
+      "req": "2",
+      "tur": "FULL DAY",
+      "fini": "2026-05-19",
+      "fechas": [
+        "2026-05-19",
+        "2026-05-20",
+        "2026-05-21",
+        "2026-05-22",
+        "2026-05-23",
+        "2026-05-25"
+      ],
+      "alta": "2026-05-21",
+      "aprob": "2",
+      "status": "Finalizado",
+      "obs": "Escuela focalizada, alta a solicitud del supervisor.",
+      "participantes": [
+        {
+          "nombre": "FERNANDO JAVIER",
+          "apellido": "BECERRA RODRIGUEZ",
+          "dni": "44813008",
+          "telefono": "+51958842248",
+          "obs": "Alta solicitada por el líder.",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "kpis": {
+            "reuAgendadas": 0,
+            "reusConcretadas": 0,
+            "leads": 0,
+            "seguimientos": 0,
+            "ventas": 0
+          },
+          "kpiStatus": "Aprobado"
         },
-        "kpiStatus": "Aprobado"
-      },
-      {
-        "nombre": "Oscar Andrés",
-        "apellido": "Alvarez Corredor",
-        "dni": "79890748",
-        "telefono": "3102199646",
-        "obs": "No tenia claro los temas de pagos y se retiró, demuestra actitud conflictiva.",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          false,
-          false,
-          false,
-          false
-        ],
-        "kpis": {
-          "reuAgendadas": 0,
-          "reusConcretadas": 0,
-          "leads": 0,
-          "seguimientos": 0,
-          "ventas": 0
-        },
-        "kpiStatus": "Retirado"
-      }
-    ]
-  },
-  {
-    "rq": "CAP-PE-001",
-    "area": "CAP-PE",
-    "resp": "JUNIOR BARBOZA",
-    "mot": "DOTACION",
-    "req": "2",
-    "tur": "FULL DAY",
-    "fini": "2026-05-19",
-    "fechas": [
-      "2026-05-19",
-      "2026-05-20",
-      "2026-05-21",
-      "2026-05-22",
-      "2026-05-23",
-      "2026-05-25"
-    ],
-    "alta": "2026-05-21",
-    "aprob": "2",
-    "status": "Finalizado",
-    "obs": "Escuela focalizada, alta a solicitud del supervisor.",
-    "participantes": [
-      {
-        "nombre": "FERNANDO JAVIER",
-        "apellido": "BECERRA RODRIGUEZ",
-        "dni": "44813008",
-        "telefono": "+51958842248",
-        "obs": "Alta solicitada por el líder.",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "kpis": {
-          "reuAgendadas": 0,
-          "reusConcretadas": 0,
-          "leads": 0,
-          "seguimientos": 0,
-          "ventas": 0
-        },
-        "kpiStatus": "Aprobado"
-      },
-      {
-        "nombre": "MARLON ALBERTO",
-        "apellido": "ABREU SEQUERA",
-        "dni": "004113921",
-        "telefono": "+51970661317",
-        "obs": "Alta solicitada por el líder.",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "kpis": {
-          "reuAgendadas": 0,
-          "reusConcretadas": 0,
-          "leads": 0,
-          "seguimientos": 0,
-          "ventas": 0
-        },
-        "kpiStatus": "Aprobado"
-      }
-    ]
-  },
-  {
-    "rq": "CAP-PE-002",
-    "area": "CAP-PE",
-    "resp": "KATIA NIZAMA",
-    "mot": "DOTACION",
-    "req": "1",
-    "tur": "FULL DAY",
-    "fini": "2026-05-19",
-    "fechas": [
-      "2026-05-19",
-      "2026-05-20",
-      "2026-05-21",
-      "2026-05-22",
-      "2026-05-23",
-      "2026-05-25"
-    ],
-    "alta": "2026-05-21",
-    "aprob": "1",
-    "status": "Finalizado",
-    "obs": "Escuela focalizada, alta a solicitud del líder.",
-    "participantes": [
-      {
-        "nombre": "RUTH ESTHER",
-        "apellido": "VILLACORTA PABLO",
-        "dni": "73630061",
-        "telefono": "+51994707213",
-        "obs": "Alta solicitada por el líder.",
-        "dias": "3 T + 3 OJT",
-        "teoricos": 3,
-        "ojt": 3,
-        "asistencia": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "kpis": {
-          "reuAgendadas": 0,
-          "reusConcretadas": 0,
-          "leads": 0,
-          "seguimientos": 0,
-          "ventas": 0
-        },
-        "kpiStatus": "Aprobado"
-      }
-    ]
-  },
-  {
-    "rq": "TEST-UPDATE-001",
-    "area": "TEST",
-    "resp": "Automated Tester",
-    "mot": "PRUEBA",
-    "req": "1",
-    "tur": "TEST",
-    "fini": "2026-05-25",
-    "fechas": [
-      "2026-05-25"
-    ],
-    "alta": "2026-05-25",
-    "aprob": "0",
-    "status": "Prueba",
-    "obs": "Registro de prueba añadido desde la interfaz para verificar guardado en GitHub.",
-    "participantes": []
-  }
-]
+        {
+          "nombre": "MARLON ALBERTO",
+          "apellido": "ABREU SEQUERA",
+          "dni": "004113921",
+          "telefono": "+51970661317",
+          "obs": "Alta solicitada por el líder.",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "kpis": {
+            "reuAgendadas": 0,
+            "reusConcretadas": 0,
+            "leads": 0,
+            "seguimientos": 0,
+            "ventas": 0
+          },
+          "kpiStatus": "Aprobado"
+        }
+      ]
+    },
+    {
+      "rq": "CAP-PE-002",
+      "area": "CAP-PE",
+      "resp": "KATIA NIZAMA",
+      "mot": "DOTACION",
+      "req": "1",
+      "tur": "FULL DAY",
+      "fini": "2026-05-19",
+      "fechas": [
+        "2026-05-19",
+        "2026-05-20",
+        "2026-05-21",
+        "2026-05-22",
+        "2026-05-23",
+        "2026-05-25"
+      ],
+      "alta": "2026-05-21",
+      "aprob": "1",
+      "status": "Finalizado",
+      "obs": "Escuela focalizada, alta a solicitud del líder.",
+      "participantes": [
+        {
+          "nombre": "RUTH ESTHER",
+          "apellido": "VILLACORTA PABLO",
+          "dni": "73630061",
+          "telefono": "+51994707213",
+          "obs": "Alta solicitada por el líder.",
+          "dias": "3 T + 3 OJT",
+          "teoricos": 3,
+          "ojt": 3,
+          "asistencia": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "kpis": {
+            "reuAgendadas": 0,
+            "reusConcretadas": 0,
+            "leads": 0,
+            "seguimientos": 0,
+            "ventas": 0
+          },
+          "kpiStatus": "Aprobado"
+        }
+      ]
+    },
+    {
+      "rq": "TEST-UPDATE-001",
+      "area": "TEST",
+      "resp": "Automated Tester",
+      "mot": "PRUEBA",
+      "req": "1",
+      "tur": "TEST",
+      "fini": "2026-05-25",
+      "fechas": [
+        "2026-05-25"
+      ],
+      "alta": "2026-05-25",
+      "aprob": "0",
+      "status": "Prueba",
+      "obs": "Registro de prueba añadido desde la interfaz para verificar guardado en GitHub.",
+      "participantes": []
+    },
+    {
+      "rq": "TEST-SAVE-20260526T172401Z",
+      "area": "TEST",
+      "resp": "Assistant",
+      "mot": "PRUEBA_SAVE",
+      "req": "0",
+      "tur": "N/A",
+      "fini": "2026-05-26",
+      "fechas": [
+        "2026-05-26"
+      ],
+      "alta": "2026-05-26",
+      "aprob": "0",
+      "status": "TEST",
+      "obs": "Registro de prueba desde asistente"
+    }
+  ]
+}
