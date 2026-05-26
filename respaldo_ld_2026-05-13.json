@@ -4,7 +4,7 @@
     "area": "LIC-PE",
     "resp": "WOLGFANG JIMENEZ",
     "mot": "DOTACION",
-    "req": "2",
+    "req": "1",
     "tur": "FULL DAY",
     "fini": "2026-05-14",
     "fechas": [
@@ -15,17 +15,17 @@
       "2026-05-19",
       "2026-05-20"
     ],
-    "alta": "Pendiente",
-    "aprob": "0",
-    "status": "En proceso",
+    "alta": "2026-05-26",
+    "aprob": "1",
+    "status": "Finalizado",
     "obs": "se esta llevando como full time a la espera de la programación de Colombia",
     "participantes": [
       {
         "nombre": "JESÚS RAFAEL",
         "apellido": "POMA CÁCERES",
-        "dni": "12345678",
+        "dni": "42479319",
         "telefono": "913812705",
-        "obs": "se le nota distraido, muy dependiente no poca proactividad",
+        "obs": "se le nota distraido, muy dependiente no poca proactividad, Se le brinda alta el dia 26/05, considerando apto el seguimiento brindado hasta ahora.",
         "dias": "3 T + 3 OJT",
         "teoricos": 3,
         "ojt": 3,
@@ -229,6 +229,387 @@
         "teoricos": 3,
         "ojt": 3,
         "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      }
+    ]
+  },
+  {
+    "rq": "CAP-PE-003",
+    "area": "CAP-PE",
+    "resp": "WOLGFANG JIMENEZ",
+    "mot": "DOTACION",
+    "req": "1",
+    "tur": "FULL DAY",
+    "fini": "2026-05-01",
+    "fechas": [
+      "2026-05-01",
+      "2026-05-02",
+      "2026-05-04",
+      "2026-05-05",
+      "2026-05-06",
+      "2026-05-07"
+    ],
+    "alta": "2026-05-05",
+    "aprob": "1",
+    "status": "Finalizado",
+    "obs": "comercial de arequipa",
+    "participantes": [
+      {
+        "nombre": "Ronald Jesús",
+        "apellido": "Pari Cinticala",
+        "dni": "71275728",
+        "telefono": "994944377",
+        "obs": "excelente desenvolvimiento comercial",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 5,
+          "reusConcretadas": 3,
+          "leads": 60,
+          "seguimientos": 0,
+          "ventas": 2
+        },
+        "kpiStatus": "Aprobado"
+      }
+    ]
+  },
+  {
+    "rq": "LIC-PE-002",
+    "area": "LIC-PE",
+    "resp": "WOLGFANG JIMENEZ",
+    "mot": "DOTACION",
+    "req": "3",
+    "tur": "FULL DAY",
+    "fini": "2026-04-15",
+    "fechas": [
+      "2026-04-15",
+      "2026-04-16",
+      "2026-04-17",
+      "2026-04-18",
+      "2026-04-20",
+      "2026-04-21"
+    ],
+    "alta": "2026-04-20",
+    "aprob": "1",
+    "status": "Finalizado",
+    "obs": "Alta aprobada por líder",
+    "participantes": [
+      {
+        "nombre": "Alejandrina",
+        "apellido": "Maury Alpiste",
+        "dni": "10191701",
+        "telefono": "",
+        "obs": "",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      },
+      {
+        "nombre": "Rossana",
+        "apellido": "Lobatón Hernández",
+        "dni": "22302594",
+        "telefono": "",
+        "obs": "",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      },
+      {
+        "nombre": "Elias Moises",
+        "apellido": "Guedez Maramara",
+        "dni": "007148885",
+        "telefono": "",
+        "obs": "",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      }
+    ]
+  },
+  {
+    "rq": "LIC-PE-003",
+    "area": "LIC-PE",
+    "resp": "WOLGFANG JIMENEZ",
+    "mot": "DOTACION",
+    "req": "2",
+    "tur": "FULL DAY",
+    "fini": "2026-03-26",
+    "fechas": [
+      "2026-03-26",
+      "2026-03-27",
+      "2026-03-28",
+      "2026-03-30",
+      "2026-03-31",
+      "2026-04-01"
+    ],
+    "alta": "2026-04-20",
+    "aprob": "2",
+    "status": "Finalizado",
+    "obs": "Alta con ok de Líder",
+    "participantes": [
+      {
+        "nombre": "CHARLY FABRIZIO",
+        "apellido": "PIMENTEL RIVERA",
+        "dni": "43326959",
+        "telefono": "918196150",
+        "obs": "Alta con ok de Líder",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      },
+      {
+        "nombre": "EDWIN FREDDY",
+        "apellido": "CAICEDO GONZALES",
+        "dni": "10634423",
+        "telefono": "948015773",
+        "obs": "Alta con ok de Líder",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      }
+    ]
+  },
+  {
+    "rq": "TRIB-001",
+    "area": "TRIB",
+    "resp": "AUXILIAR 1",
+    "mot": "DOTACION",
+    "req": "3",
+    "tur": "AM",
+    "fini": "2026-03-25",
+    "fechas": [
+      "2026-03-25",
+      "2026-03-26",
+      "2026-03-27",
+      "2026-03-28",
+      "2026-03-30",
+      "2026-03-31",
+      "2026-04-01",
+      "2026-04-02"
+    ],
+    "alta": "2026-04-20",
+    "aprob": "3",
+    "status": "Finalizado",
+    "obs": "escuela simultanea con brevetes y capitales. Alta con ok de Líder",
+    "participantes": [
+      {
+        "nombre": "SERGIO FABIAN",
+        "apellido": "LOPEZ ALVARADO",
+        "dni": "74096832",
+        "telefono": "983317368",
+        "obs": "Alta con ok de Líder",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      },
+      {
+        "nombre": "LUIS ADRIAN",
+        "apellido": "CONDORI RODRIGUEZ",
+        "dni": "76035154",
+        "telefono": "988736983",
+        "obs": "Alta con ok de Líder",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      },
+      {
+        "nombre": "EDU SANTOS",
+        "apellido": "TORRES HUMALIES",
+        "dni": "74199477",
+        "telefono": "992466973",
+        "obs": "Alta con ok de Líder",
+        "dias": "3 T + 3 OJT",
+        "teoricos": 3,
+        "ojt": 3,
+        "asistencia": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "kpis": {
+          "reuAgendadas": 0,
+          "reusConcretadas": 0,
+          "leads": 0,
+          "seguimientos": 0,
+          "ventas": 0
+        },
+        "kpiStatus": "Aprobado"
+      }
+    ]
+  },
+  {
+    "rq": "CAP-PE-004",
+    "area": "CAP-PE",
+    "resp": "AUXILIAR 1",
+    "mot": "DOTACION",
+    "req": "1",
+    "tur": "PM",
+    "fini": "2026-03-24",
+    "fechas": [
+      "2026-03-24",
+      "2026-03-25",
+      "2026-03-26",
+      "2026-03-27",
+      "2026-03-28",
+      "2026-03-30",
+      "2026-03-31",
+      "2026-04-01"
+    ],
+    "alta": "2026-04-20",
+    "aprob": "1",
+    "status": "Finalizado",
+    "obs": "Alta aprobada por líder",
+    "participantes": [
+      {
+        "nombre": "EDUARDO ANTONIO",
+        "apellido": "EFFIO URBINA",
+        "dni": "10455714",
+        "telefono": "925475734",
+        "obs": "Alta con Ok de líder",
+        "dias": "3 T + 5 OJT",
+        "teoricos": 3,
+        "ojt": 5,
+        "asistencia": [
+          true,
+          true,
           true,
           true,
           true,
