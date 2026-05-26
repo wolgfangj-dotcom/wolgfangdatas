@@ -53,23 +53,6 @@
     "area": "LIC-CO",
     "resp": "AUXILIAR 1",
     "mot": "DOTACION",
-      {
-        "rq": "TEST-UPDATE-001",
-        "area": "TEST",
-        "resp": "Automated Tester",
-        "mot": "PRUEBA",
-        "req": "1",
-        "tur": "TEST",
-        "fini": "2026-05-25",
-        "fechas": [
-          "2026-05-25"
-        ],
-        "alta": "2026-05-25",
-        "aprob": "0",
-        "status": "Prueba",
-        "obs": "Registro de prueba añadido desde la interfaz para verificar guardado en GitHub.",
-        "participantes": []
-      }
     "req": "2",
     "tur": "FULL DAY",
     "fini": "2026-05-19",
@@ -263,5 +246,22 @@
         "kpiStatus": "Aprobado"
       }
     ]
+  },
+  {
+    "rq": "TEST-UPDATE-001",
+    "area": "TEST",
+    "resp": "Automated Tester",
+    "mot": "PRUEBA",
+    "req": "1",
+    "tur": "TEST",
+    "fini": "2026-05-25",
+    "fechas": [
+      "2026-05-25"
+    ],
+    "alta": "2026-05-25",
+    "aprob": "0",
+    "status": "Prueba",
+    "obs": "Registro de prueba añadido desde la interfaz para verificar guardado en GitHub.",
+    "participantes": []
   }
 ]
