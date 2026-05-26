@@ -116,8 +116,22 @@
         <div>
             <button class="btn" style="background:var(--primary)" onclick="exportarData()">💾 Exportar</button>
             <button class="btn" style="background:var(--secondary)" onclick="document.getElementById('fileIn').click()">📂 Importar</button>
+            <button class="btn" style="background:#27ae60;" onclick="guardarEnGitHub()">☁️ Guardar en GitHub</button>
+            <button class="btn" style="background:#1abc9c;" onclick="applyTestUpdate()">🧪 Probar actualización (test)</button>
+            <button class="btn" style="background:#555;" onclick="cargarDesdeGitHub()">🔄 Actualizar desde GitHub</button>
             <input type="file" id="fileIn" style="display:none" onchange="importarData(event)">
         </div>
+    </div>
+    <div id="githubStatus" style="margin-bottom:6px; color:#333; font-size:0.95em;"></div>
+    <div style="margin-bottom:10px; font-size:0.95em; color:#333;">
+        <label style="display:inline-flex; gap:8px; align-items:center;"><input id="autoSyncToggle" type="checkbox"> Sincronizar automáticamente cada
+            <select id="autoSyncInterval" style="margin:0 8px;">
+                <option value="1">1</option>
+                <option value="5" selected>5</option>
+                <option value="15">15</option>
+                <option value="60">60</option>
+            </select>
+            minutos</label>
     </div>
 
     <div class="tabs">
@@ -238,10 +252,191 @@
 
 <script>
     const ADMIN_UNLOCK_KEY = 'wolf0985$$';
+    const GITHUB_DATA_PATH = 'respaldo_ld_2026-05-13.json';
     let unlockRequestKey = null;
     let db = JSON.parse(localStorage.getItem('escuelas_db')) || [];
     let fechaVer = new Date();
-    normalizeDb();
+
+    async function setGitHubStatus(message, success = true) {
+        const statusEl = document.getElementById('githubStatus');
+        if (!statusEl) return;
+        statusEl.style.color = success ? '#227a1c' : '#a12f2f';
+        statusEl.textContent = message;
+    }
+
+    async function loadGitHubDataIfEmpty() {
+        if (Array.isArray(db) && db.length) return;
+        try {
+            const response = await fetch('/api/load-github-data');
+            if (!response.ok) throw new Error(`GitHub data response ${response.status}`);
+            const payload = await response.json();
+            db = Array.isArray(payload) ? payload : (payload.data || []);
+            if (payload && payload.sha) localStorage.setItem('github_data_sha', payload.sha);
+            normalizeDb();
+            localStorage.setItem('escuelas_db', JSON.stringify(db));
+            setGitHubStatus('Datos cargados desde GitHub.');
+        } catch (error) {
+            console.warn('No se pudo cargar respaldo desde GitHub:', error);
+            setGitHubStatus('No se pudo cargar datos desde GitHub. Se usará contenido local.', false);
+            try {
+                const response = await fetch('./respaldo_ld_2026-05-13.json');
+                if (!response.ok) throw new Error(`Local data response ${response.status}`);
+                db = await response.json();
+                normalizeDb();
+                localStorage.setItem('escuelas_db', JSON.stringify(db));
+                setGitHubStatus('Datos cargados desde el archivo local de respaldo.');
+            } catch (localError) {
+                console.warn('No se pudo cargar el respaldo local:', localError);
+                setGitHubStatus('No se pudo cargar datos desde GitHub ni desde el archivo local.', false);
+            }
+        }
+    }
+
+    async function cargarDesdeGitHub() {
+        setGitHubStatus('Actualizando datos desde GitHub...');
+        db = [];
+        await loadGitHubDataIfEmpty();
+        renderTabla();
+        renderMonthSelect();
+        renderDownloadFilters();
+    }
+
+    async function guardarEnGitHub() {
+        try {
+            setGitHubStatus('Guardando datos en GitHub...');
+            const response = await fetch('/api/save-github-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: JSON.stringify(db, null, 2), message: 'Actualización de datos de escuelas desde el sitio' })
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || `HTTP ${response.status}`);
+            }
+            const result = await response.json();
+            // store returned content SHA so we can detect remote changes later
+            if (result.contentSha) localStorage.setItem('github_data_sha', result.contentSha);
+            setGitHubStatus(`Guardado exitoso en GitHub: ${result.commit?.sha || 'OK'}`);
+        } catch (error) {
+            console.error(error);
+            setGitHubStatus(`Error al guardar en GitHub: ${error.message}`, false);
+        }
+    }
+
+    // --- Auto-sync and remote-check utilities ---
+    let autoSyncIntervalId = null;
+
+    async function checkRemoteAndSync() {
+        try {
+            const resp = await fetch('/api/load-github-data');
+            if (!resp.ok) return;
+            const payload = await resp.json();
+            const remoteData = payload.data;
+            const remoteSha = payload.sha;
+            const localSha = localStorage.getItem('github_data_sha');
+            if (!localSha && remoteSha) {
+                localStorage.setItem('github_data_sha', remoteSha);
+                return;
+            }
+            if (remoteSha && remoteSha !== localSha) {
+                // Remote changed: update local db and UI
+                db = Array.isArray(remoteData) ? remoteData : (remoteData.data || []);
+                normalizeDb();
+                localStorage.setItem('escuelas_db', JSON.stringify(db));
+                localStorage.setItem('github_data_sha', remoteSha);
+                setGitHubStatus('Datos actualizados automáticamente desde GitHub.');
+                renderTabla(); renderMonthSelect(); renderDownloadFilters();
+            }
+        } catch (e) {
+            console.warn('checkRemoteAndSync error', e);
+        }
+    }
+
+    function startAutoSync() {
+        stopAutoSync();
+        const toggle = document.getElementById('autoSyncToggle');
+        const intervalEl = document.getElementById('autoSyncInterval');
+        if (!toggle || !toggle.checked) return;
+        const mins = parseInt(intervalEl?.value || '5', 10) || 5;
+        const ms = mins * 60 * 1000;
+        autoSyncIntervalId = setInterval(checkRemoteAndSync, ms);
+        localStorage.setItem('autoSyncEnabled', 'true');
+        localStorage.setItem('autoSyncInterval', String(mins));
+        setGitHubStatus(`Auto-sync activo (${mins} min).`);
+    }
+
+    function stopAutoSync() {
+        if (autoSyncIntervalId) clearInterval(autoSyncIntervalId);
+        autoSyncIntervalId = null;
+        localStorage.setItem('autoSyncEnabled', 'false');
+        setGitHubStatus('Auto-sync detenido.', true);
+    }
+
+    function initAutoSyncUI() {
+        const toggle = document.getElementById('autoSyncToggle');
+        const intervalEl = document.getElementById('autoSyncInterval');
+        if (!toggle || !intervalEl) return;
+        const enabled = localStorage.getItem('autoSyncEnabled') === 'true';
+        const intervalSaved = localStorage.getItem('autoSyncInterval') || '5';
+        intervalEl.value = intervalSaved;
+        toggle.checked = enabled;
+        toggle.addEventListener('change', () => { if (toggle.checked) startAutoSync(); else stopAutoSync(); });
+        intervalEl.addEventListener('change', () => { localStorage.setItem('autoSyncInterval', intervalEl.value); if (toggle.checked) startAutoSync(); });
+        if (enabled) startAutoSync();
+    }
+
+    async function checkRemoteOnLoadPrompt() {
+        try {
+            const resp = await fetch('/api/load-github-data');
+            if (!resp.ok) return;
+            const payload = await resp.json();
+            const remoteSha = payload.sha;
+            const localSha = localStorage.getItem('github_data_sha');
+            if (remoteSha && remoteSha !== localSha) {
+                const ok = confirm('Hay cambios en los datos remotos. ¿Deseas cargarlos ahora? Se sobrescribirán los datos locales.');
+                if (ok) {
+                    db = Array.isArray(payload.data) ? payload.data : (payload.data.data || []);
+                    normalizeDb();
+                    localStorage.setItem('escuelas_db', JSON.stringify(db));
+                    localStorage.setItem('github_data_sha', remoteSha);
+                    renderTabla(); renderMonthSelect(); renderDownloadFilters();
+                    setGitHubStatus('Datos cargados desde GitHub al iniciar.');
+                } else {
+                    setGitHubStatus('Se omitió la carga remota al iniciar.', true);
+                }
+            }
+        } catch (e) { console.warn('checkRemoteOnLoadPrompt', e); }
+    }
+
+    // Add a test update: append a sample record and push to GitHub
+    function applyTestUpdate() {
+        const today = new Date().toISOString().slice(0,10);
+        const testRecord = {
+            rq: `TEST-UPDATE-${Math.floor(Math.random()*900+100)}`,
+            area: 'TEST',
+            resp: 'Automated Tester',
+            mot: 'PRUEBA',
+            req: '1',
+            tur: 'TEST',
+            fini: today,
+            fechas: [today],
+            alta: today,
+            aprob: '0',
+            status: 'Prueba',
+            obs: 'Registro de prueba añadido desde la interfaz para verificar guardado en GitHub.',
+            participantes: []
+        };
+        db.push(testRecord);
+        normalizeDb();
+        localStorage.setItem('escuelas_db', JSON.stringify(db));
+        renderTabla(); renderMonthSelect(); renderDownloadFilters();
+        // Push immediately to GitHub
+        if (confirm('Se añadirá un registro de prueba y se guardará en GitHub. ¿Continuar?')) {
+            guardarEnGitHub();
+        } else {
+            setGitHubStatus('Actualización de prueba cancelada por el usuario.', true);
+        }
+    }
 
     // Mantener estado de UI (áreas y escuelas abiertas) para evitar que el UI "se cierre" al re-render
     let openAreas = JSON.parse(sessionStorage.getItem('openAreas') || '{}');
@@ -1175,7 +1370,7 @@ function guardar() {
         r.readAsText(ev.target.files[0]);
     }
 
-    window.onload = () => { renderTabla(); renderMonthSelect(); renderDownloadFilters(); };
+    window.onload = async () => { await loadGitHubDataIfEmpty(); renderTabla(); renderMonthSelect(); renderDownloadFilters(); initAutoSyncUI(); checkRemoteOnLoadPrompt(); };
 </script>
 </body>
 </html>

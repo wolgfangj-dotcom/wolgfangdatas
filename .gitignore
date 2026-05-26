@@ -8,3 +8,6 @@ Thumbs.db
 # Ignorar archivos de respaldo
 *~
 *.bak
+
+# Local Netlify folder
+.netlify

@@ -241,7 +241,19 @@
     let unlockRequestKey = null;
     let db = JSON.parse(localStorage.getItem('escuelas_db')) || [];
     let fechaVer = new Date();
-    normalizeDb();
+
+    async function loadBackupDataIfEmpty() {
+        if (Array.isArray(db) && db.length) return;
+        try {
+            const response = await fetch('./respaldo_ld_2026-05-13.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            db = await response.json();
+            normalizeDb();
+            localStorage.setItem('escuelas_db', JSON.stringify(db));
+        } catch (error) {
+            console.warn('No se pudo cargar respaldo inicial:', error);
+        }
+    }
 
     // Mantener estado de UI (áreas y escuelas abiertas) para evitar que el UI "se cierre" al re-render
     let openAreas = JSON.parse(sessionStorage.getItem('openAreas') || '{}');
@@ -362,16 +374,22 @@ function guardar() {
     function normalizeDb() {
         db = db.map(e => ({
             ...e,
+            req: e.req ?? e.n_req ?? 0,
+            aprob: e.aprob ?? e.n_aprob ?? 0,
+            alta: e.alta || e.falta || "Pendiente",
+            status: e.status || 'Programado',
             participantes: Array.isArray(e.participantes) ? e.participantes.map(p => ({
                 ...p,
+                nombre: p.nombre || p.nom || '',
+                apellido: p.apellido || p.ape || '',
+                telefono: p.telefono || p.tel || '',
+                obs: p.obs || '',
+                asistencia: Array.isArray(p.asistencia) ? p.asistencia : Array.isArray(p.asist) ? p.asist : [],
                 kpis: p.kpis || { reuAgendadas:0, reusConcretadas:0, leads:0, seguimientos:0, ventas:0 },
                 kpiStatus: p.kpiStatus || ''
             })) : [],
             fechas: Array.isArray(e.fechas) ? e.fechas : [],
-            alta: e.alta || "Pendiente",
-            aprob: e.aprob || 0,
-            obs: e.obs || "",
-            status: e.status || 'Programado'
+            obs: e.obs || ""
         }));
     }
 
@@ -1175,7 +1193,7 @@ function guardar() {
         r.readAsText(ev.target.files[0]);
     }
 
-    window.onload = () => { renderTabla(); renderMonthSelect(); renderDownloadFilters(); };
+    window.onload = async () => { await loadBackupDataIfEmpty(); normalizeDb(); renderTabla(); renderMonthSelect(); renderDownloadFilters(); };
 </script>
 </body>
 </html>
